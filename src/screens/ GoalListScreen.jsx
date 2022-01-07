@@ -18,7 +18,7 @@ export default function GoalListScreen(props) {
       <View style={styles.createButton}>
         <CircleButton
           name="edit-2"
-          size="50"
+          size={50}
           color="white"
           onPress={() => {
             navigation.reset({

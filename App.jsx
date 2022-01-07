@@ -2,6 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import LinearGradient from 'react-native-linear-gradient';
+import firebase from 'firebase';
 
 // 上記のライブラリはグラデーションを彩るためのもの。
 
@@ -11,13 +12,19 @@ import LoginScreen from './src/screens/LoginScreen';
 import SignupScreen from './src/screens/SignupScreen';
 import GoalListScreen from './src/screens/ GoalListScreen';
 
+import { firebaseConfig } from './env';
+
 const Stack = createStackNavigator();
+
+if (firebase.apps.length === 0) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="Signup"
         screenOptions={{
           headerStyle: { backgroundColor: '#BEB7E3', height: 115 },
           headerTitleStyle: { color: 'white', fontSize: 22 },
@@ -52,3 +59,5 @@ export default function App() {
 //  ヘッダーがヘッダーが二つでかぶっている為ここで修正する。
 // サインアップ画面の登録のボタンは現時点ではメモリスト（メモアップ）の画面に遷移するようになっているため、
 // ゴールリストスクリーンを作ってそこに飛ばす。
+
+//  なぜCountScreenだけBackボタンがデフォルトで出現しているのか要確認。おそらくメモアップ作ったときに、ログインとサインアップだけ消した覚えあり

@@ -4,6 +4,7 @@ import {
   shape, oneOf, func, string,
 } from 'prop-types';
 import { Feather } from '@expo/vector-icons';
+import { number } from 'prop-types';
 
 export default function CircleButton(props) {
   const {
@@ -20,7 +21,7 @@ CircleButton.propTypes = {
   style: shape(),
   name: oneOf(['plus', 'edit-2', 'check', 'minus']).isRequired,
   onPress: func,
-  size: string.isRequired,
+  size: number.isRequired,
   color: string.isRequired,
 };
 

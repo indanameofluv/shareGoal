@@ -76,3 +76,4 @@ const styles = StyleSheet.create({
 });
 
 //  BUttonにmarginが効かない。
+// ここでもuseState()を使うことになるはずなのである。
