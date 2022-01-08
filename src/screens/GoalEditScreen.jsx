@@ -1,18 +1,47 @@
-import React from "react"
+import React, {useState} from "react"
 import {
   View, Text, StyleSheet, TextInput, Keyboard,
 } from 'react-native';
+
+import firebase from 'firebase';
 
 import Button from '../components/Button';
 
 export default function GoalEditScreen(props) {
   const { navigation } = props;
+  const [bodyText, setBodyText] = useState('');
+
+  function handlePress () {
+      const { currentUser } = firebase.auth();
+      const db = firebase.firestore();
+      const ref = db.collection(`users/${currentUser.uid}/goals`);
+      ref.add({
+        bodyText,
+        updatedAt: new Date(),
+      })
+      .then((docRef) => {
+        console.log('Created!', docRef.id);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'GoalList' }],
+        });
+      })
+      .catch((error) => {
+        console.log('Error!', error);
+      });
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.AboutGoal}>
         <View style={styles.TextInputSet}>
           <Text style={styles.GoalText}>・目標はなんですか？</Text>
-          <TextInput style={styles.GoalInput} />
+          <TextInput
+            value={bodyText}
+            style={styles.GoalInput} 
+            onChangeText={(text) => { setBodyText(text); }}
+            autoFocus
+          />
         </View>
         <View style={styles.TextInputSet}>
           <Text style={styles.GoalText}>・目標時間は？</Text>
@@ -30,17 +59,14 @@ export default function GoalEditScreen(props) {
       <Button
         style={styles.Button}
         label="Complete"
-        onPress={() => {
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'GoalList' }],
-          });
-        }}
+        onPress={handlePress}
       />
 
     </View>
   );
 }
+
+// autoFocusで自動的にキーボードが出力されない？？？
 
 const styles = StyleSheet.create({
   container: {
