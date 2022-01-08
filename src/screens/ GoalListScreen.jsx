@@ -1,13 +1,21 @@
-import React from 'react';
+import React, { userEffect } from 'react';
 import {
   StyleSheet, TouchableOpacity, Text, View,
 } from 'react-native';
+import { useEffect } from 'react/cjs/react.development';
 
 import CircleButton from '../components/CircleButton';
 import GoalList from '../components/GoalList';
+import LogOutButton from '../components/LogOutButton';
 
 export default function GoalListScreen(props) {
   const { goal, goalDue, navigation } = props;
+  useEffect (() => {
+    navigation.setOptions({
+      headerRight: () => <LogOutButton />,
+    });
+  },[]);
+  
   return (
     <View style={styles.container}>
       <View style={styles.eachGoal}>
