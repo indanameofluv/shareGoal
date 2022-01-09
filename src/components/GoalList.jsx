@@ -1,32 +1,52 @@
 import React from 'react';
 import {
-  View, Text, StyleSheet, TouchableOpacity, Alert,
+  View, Text, StyleSheet, TouchableOpacity, Alert, FlatList,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { shape, string, instanceOf, arrayOf } from 'prop-types';
 // import { Feather } from 'expo/vector-icons';
 
-export default function GoalList() {
+export default function GoalList(props) {
+  const { goals } = props;
   const navigation = useNavigation();
-  return (
-    <View>
+
+  function renderItem ({ item }) {
+    return (
       <TouchableOpacity
         style={styles.GoalListItem}
         onPress={() => { navigation.navigate('Count'); }}
       >
-        <View>
-          <Text style={styles.GoalListItemTitle}>勉強時間</Text>
-          <Text style={styles.GoalListItemDate}>2022年1月3日</Text>
-        </View>
-        <TouchableOpacity
-          onPress={() => { Alert.alert('貴様、本当に良いのか？'); }}
-          style={styles.GoalDelete}
-        >
-          <Text style={styles.deleteButton}>X</Text>
-        </TouchableOpacity>
+      <View>
+        <Text style={styles.GoalListItemTitle} numberOfLines={1}>{item.bodyText}</Text>
+        <Text style={styles.GoalListItemDate}>{String(item.updatedAt)}</Text>
+      </View>
+      <TouchableOpacity
+        onPress={() => { Alert.alert('貴様、本当に良いのか？'); }}
+        style={styles.GoalDelete}
+      >
+        <Text style={styles.deleteButton}>X</Text>
       </TouchableOpacity>
+    </TouchableOpacity>
+    );
+  }
+  return (
+    <View>
+      <FlatList
+        data = {goals}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+       />
     </View>
   );
 }
+
+GoalList.propTypes  = {
+  goals: arrayOf(shape({
+    id: string,
+    bodyText: string,
+    updatedAt: instanceOf(Date),
+  })).isRequired,
+};
 
 const styles = StyleSheet.create({
   GoalListItem: {
@@ -56,3 +76,7 @@ const styles = StyleSheet.create({
     color: '#B0B0B0',
   },
 });
+
+
+// slideでデリートのやつが出てくる設定したい。
+// GoalEditが空欄の箇所がある場合は、記入漏れがありますっていう赤文字が上記に出て、もう一回作り直させられる機能欲しい。
