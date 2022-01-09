@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import { shape, string, instanceOf, arrayOf } from 'prop-types';
 // import { Feather } from 'expo/vector-icons';
 
+import { dateToString } from '../utils';
+
 export default function GoalList(props) {
   const { goals } = props;
   const navigation = useNavigation();
@@ -14,11 +16,11 @@ export default function GoalList(props) {
     return (
       <TouchableOpacity
         style={styles.GoalListItem}
-        onPress={() => { navigation.navigate('Count'); }}
+        onPress={() => { navigation.navigate('Count', { id: item.id }); }}
       >
       <View>
         <Text style={styles.GoalListItemTitle} numberOfLines={1}>{item.bodyText}</Text>
-        <Text style={styles.GoalListItemDate}>{String(item.updatedAt)}</Text>
+        <Text style={styles.GoalListItemDate}>{dateToString(item.updatedAt)}</Text>
       </View>
       <TouchableOpacity
         onPress={() => { Alert.alert('貴様、本当に良いのか？'); }}
@@ -80,3 +82,6 @@ const styles = StyleSheet.create({
 
 // slideでデリートのやつが出てくる設定したい。
 // GoalEditが空欄の箇所がある場合は、記入漏れがありますっていう赤文字が上記に出て、もう一回作り直させられる機能欲しい。
+// 貴様本当にいいのか？のところはキャンセルと削除ボタンを二つ表示させてそれを押したら削除されるという機能をつけたい。
+// dateToStringに関してはAMとPMを分けないと意味がわからなくなりそう
+// ゴールリストに関してはソートで、達成率昇順降順、目標名昇順降順などをできるようにしたい。

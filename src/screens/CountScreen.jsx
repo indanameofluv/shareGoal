@@ -1,14 +1,41 @@
-import React from 'react';
+import React, { memo, useEffect, useState } from 'react';
+import { shape, string } from 'prop-types';
 import { StyleSheet, Text, View } from 'react-native';
+import firebase from 'firebase';
 
 import CircleButton from '../components/CircleButton';
+import { dateToString } from '../utils';
 
-export default function CountScreen() {
+export default function CountScreen(props) {
+  const { route } = props;
+  const { id } = route.params;
+  console.log(id);
+  const [goal, setGoal] = useState(null);
+
+  useEffect(() => {
+    const { currentUser } = firebase.auth();
+    let unsubscribe = () => {};
+    if (currentUser) {
+      const db = firebase.firestore();
+      const ref = db.collection(`users/${currentUser.uid}/goals`).doc(id);
+      unsubscribe = ref.onSnapshot((doc) => {
+        console.log(doc.id, doc.data());
+        const data = doc.data();
+        setGoal({
+          id: doc.id,
+          bodyText: data.bodyText,
+          updatedAt: data.updatedAt.toDate(),
+        });
+      });
+    }
+    return unsubscribe;
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.eachGoal}>
         <View style={styles.texts}>
-          <Text style={styles.goalName}>勉強時間</Text>
+          <Text style={styles.goalName} numberOfLines={1}>{goal && goal.bodyText}</Text>
           <Text style={styles.number}>0h</Text>
         </View>
         <View style={styles.buttonPair}>
@@ -24,6 +51,12 @@ export default function CountScreen() {
   );
 }
 
+CountScreen.propTypes = {
+  route: shape({
+    params: shape({ id: string }),
+  }).isRequired,
+};
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
