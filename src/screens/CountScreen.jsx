@@ -10,7 +10,9 @@ export default function CountScreen(props) {
   const { route } = props;
   const { id } = route.params;
   console.log(id);
+  console.log('アイウエオ');
   const [goal, setGoal] = useState(null);
+  console.log(props);
 
   useEffect(() => {
     const { currentUser } = firebase.auth();
@@ -24,6 +26,8 @@ export default function CountScreen(props) {
         setGoal({
           id: doc.id,
           bodyText: data.bodyText,
+          number: data.number,
+          due: data.due,
           updatedAt: data.updatedAt.toDate(),
         });
       });
@@ -36,14 +40,15 @@ export default function CountScreen(props) {
       <View style={styles.eachGoal}>
         <View style={styles.texts}>
           <Text style={styles.goalName} numberOfLines={1}>{goal && goal.bodyText}</Text>
-          <Text style={styles.number}>0h</Text>
+          <Text style={styles.goalDue}>{goal && goal.due}まで</Text>
+          <Text style={styles.number}>{goal && goal.number}h</Text>
         </View>
         <View style={styles.buttonPair}>
           <View>
-            <CircleButton name="minus" size={50} color="white" />
+            <CircleButton name="minus" size={50} color="white" style={styles.minusCircle}/>
           </View>
           <View>
-            <CircleButton name="plus" size={50} color="white" />
+            <CircleButton name="plus" size={50} color="white" style={styles.plusCircle} />
           </View>
         </View>
       </View>
@@ -61,21 +66,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    position: 'relative'
   },
   eachGoal: {
     flex: 1,
     marginTop: 60,
   },
   buttonPair: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingHorizontal: 10,
-    marginTop: 280,
+    position: 'absolute',
+    bottom: 40,
   },
   goalName: {
     marginBottom: 80,
     fontSize: 40,
+    color: '#BEB7E3',
+  },
+  goalDue: {
     color: '#BEB7E3',
   },
   number: {

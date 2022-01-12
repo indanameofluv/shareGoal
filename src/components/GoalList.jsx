@@ -16,7 +16,7 @@ export default function GoalList(props) {
     return (
       <TouchableOpacity
         style={styles.GoalListItem}
-        onPress={() => { navigation.navigate('Count', { id: item.id }); }}
+        onPress={() => { navigation.navigate('Count', item); }}
       >
       <View>
         <Text style={styles.GoalListItemTitle} numberOfLines={1}>{item.bodyText}</Text>
@@ -84,4 +84,4 @@ const styles = StyleSheet.create({
 // GoalEditが空欄の箇所がある場合は、記入漏れがありますっていう赤文字が上記に出て、もう一回作り直させられる機能欲しい。
 // 貴様本当にいいのか？のところはキャンセルと削除ボタンを二つ表示させてそれを押したら削除されるという機能をつけたい。
 // dateToStringに関してはAMとPMを分けないと意味がわからなくなりそう
-// ゴールリストに関してはソートで、達成率昇順降順、目標名昇順降順などをできるようにしたい。
+// ゴールリストに関してはソートで、達成率昇順降順、目標名昇順降順など
